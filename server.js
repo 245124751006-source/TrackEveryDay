@@ -3,6 +3,7 @@ const cors = require('cors');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 const path = require('path');
+const fs = require('fs');
 const db = require('./db');
 
 const app = express();
@@ -12,6 +13,7 @@ const JWT_SECRET = process.env.JWT_SECRET || 'fallback_secret_key_change_me';
 app.use(cors());
 app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(__dirname));
 
 const INDIAN_BUDGET_STATS_BY_NAME = {
     'Groceries': 0.15,
@@ -725,7 +727,18 @@ app.delete('/api/savings/:id', authenticateToken, (req, res) => {
 
 // Serve frontend for all other routes
 app.use((req, res) => {
-    res.sendFile(path.join(__dirname, 'public', 'index.html'));
+    if (req.path.startsWith('/api')) {
+        return res.status(404).json({ status: 'error', message: `API route ${req.method} ${req.path} not found` });
+    }
+    const publicIndex = path.join(__dirname, 'public', 'index.html');
+    if (fs.existsSync(publicIndex)) {
+        return res.sendFile(publicIndex);
+    }
+    const rootIndex = path.join(__dirname, 'index.html');
+    if (fs.existsSync(rootIndex)) {
+        return res.sendFile(rootIndex);
+    }
+    res.status(404).send('Page Not Found');
 });
 
 if (require.main === module || !process.env.VERCEL) {

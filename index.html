@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Monthly Expense Tracker</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/animated-counter.css">
+</head>
+<body>
+
+    <!-- Notification Toast Container -->
+    <div id="toast-container" class="toast-container"></div>
+
+    <!-- App Container -->
+    <div class="app-background">
+        <video id="bg-video" autoplay muted playsinline>
+            <source src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260517_070729_32a7eb4e-d6e2-4571-badc-91b4dab1ecbe.mp4" type="video/mp4">
+        </video>
+        <div class="video-overlay"></div>
+
+        <!-- VIEW: HOME (Landing Page) -->
+        <main id="view-home" class="view hidden">
+            <!-- Navigation Bar for Home -->
+            <nav class="nav-bar" style="margin-bottom: 0;">
+                <div class="brand">Track EveryDay<sup>®</sup></div>
+                <ul class="nav-links">
+                    <li><a href="#" style="color: #000000;">Home</a></li>
+                    <li><a href="#">Studio</a></li>
+                    <li><a href="#">About</a></li>
+                    <li><a href="#">Journal</a></li>
+                    <li><a href="#">Reach Us</a></li>
+                </ul>
+                <div class="user-info">
+                    <button id="nav-begin-journey" class="btn btn-primary btn-sm">Begin Journey</button>
+                </div>
+            </nav>
+
+            <!-- Hero Section -->
+            <div class="hero-section">
+                <h1 class="hero-title animate-fade-rise">Beyond <span class="italic-emphasis">silence,</span> we build <span class="italic-emphasis">the eternal.</span></h1>
+                <p class="hero-desc animate-fade-rise-delay">Building platforms for brilliant minds, fearless makers, and thoughtful souls. Through the noise, we craft digital havens for deep work and pure flows.</p>
+                <button id="hero-begin-journey" class="btn btn-primary hero-btn animate-fade-rise-delay-2">Begin Journey</button>
+            </div>
+        </main>
+
+        <!-- VIEW: LOGIN -->
+        <main id="view-login" class="view glass-panel hidden">
+            <div class="login-header">
+                <h2>Welcome Back</h2>
+                <p>Manage your expenses with ease</p>
+            </div>
+            
+            <form id="login-form">
+                <div class="input-group">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" required placeholder="demo@example.com">
+                </div>
+                <div class="input-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" required placeholder="password123">
+                </div>
+                <button type="submit" class="btn btn-primary">Login</button>
+                <div class="form-footer">
+                    <a href="#" id="forgot-password">Forgot password?</a>
+                    <p>Don't have an account? <a href="#" id="show-signup">Sign up</a></p>
+                </div>
+            </form>
+        </main>
+
+        <!-- VIEW: SIGNUP -->
+        <main id="view-signup" class="view glass-panel hidden">
+            <div class="login-header">
+                <h2>Create Account</h2>
+                <p>Start tracking your expenses</p>
+            </div>
+            
+            <form id="signup-form">
+                <div class="input-group">
+                    <label for="signup-name">Full Name</label>
+                    <input type="text" id="signup-name" required placeholder="John Doe">
+                </div>
+                <div class="input-group">
+                    <label for="signup-email">Email</label>
+                    <input type="email" id="signup-email" required placeholder="john@example.com">
+                </div>
+                <div class="input-group">
+                    <label for="signup-password">Password</label>
+                    <input type="password" id="signup-password" required placeholder="Create a password">
+                </div>
+                <button type="submit" class="btn btn-primary w-100">Sign Up</button>
+                <div class="form-footer" style="justify-content: center; margin-top: 1.5rem;">
+                    <p>Already have an account? <a href="#" id="show-login">Log in</a></p>
+                </div>
+            </form>
+        </main>
+
+        <!-- VIEW: DASHBOARD -->
+        <main id="view-dashboard" class="view hidden">
+            <!-- Sidebar / Top Nav -->
+            <nav class="nav-bar">
+                <div class="brand">Track EveryDay<sup>®</sup></div>
+                <ul class="nav-links">
+                    <li><a href="#" class="active" data-target="dashboard">Dashboard</a></li>
+                    <li><a href="#" data-target="transactions">Transactions</a></li>
+                    <li><a href="#" data-target="savings">Savings 💰</a></li>
+                    <li><a href="#" data-target="payments">Payments</a></li>
+                    <li><a href="#" data-target="bills">Subscriptions</a></li>
+                    <li><a href="#" data-target="alerts">Alerts</a></li>
+                </ul>
+                <div class="user-info">
+                    <span id="user-name">User</span>
+                    <button id="logout-btn" class="btn btn-primary btn-sm">Logout</button>
+                </div>
+            </nav>
+
+            <div class="dashboard-content">
+                <!-- Main Header -->
+                <header class="dash-header">
+                    <h1>Overview</h1>
+                    <button class="btn btn-primary" id="add-expense-btn">+ Cash Transaction</button>
+                </header>
+
+                <div class="grid-layout">
+                    <!-- Summary Cards -->
+                    <section class="summary-cards" data-section="dashboard">
+                        <div class="glass-card summary-card">
+                            <h3>Total Spend</h3>
+                            <h2 id="total-spend">₹0.00</h2>
+                            <p class="trend negative">This Month</p>
+                        </div>
+                        <div class="glass-card summary-card">
+                            <h3>Total Income</h3>
+                            <h2 id="total-income">₹0.00</h2>
+                            <p class="trend positive">This Month</p>
+                        </div>
+                        <div class="glass-card summary-card">
+                            <h3>Leftover</h3>
+                            <h2 id="total-balance">₹0.00</h2>
+                            <p class="trend">This Month</p>
+                        </div>
+                    </section>
+
+                    <!-- Chart Section -->
+                    <section class="glass-card chart-section" data-section="dashboard">
+                        <h3>Spend by Category</h3>
+                        <div class="chart-container">
+                            <canvas id="categoryChart"></canvas>
+                        </div>
+                    </section>
+
+                    <!-- Budget Overview Section -->
+                    <section class="glass-card budget-section" style="grid-column: 1 / -1;" data-section="dashboard">
+                        <h3>Budget Overview</h3>
+                        <div id="budget-list" style="margin-top: 1rem; display: flex; flex-direction: column; gap: 1rem;">
+                            <!-- Populated via JS -->
+                        </div>
+                    </section>
+
+                    <!-- Recent Transactions -->
+                    <section class="glass-card recent-transactions hidden" data-section="transactions" style="grid-column: 1 / -1;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                            <h3 style="margin: 0;">Recent Transactions</h3>
+                            <input type="date" id="filter-date" style="padding: 0.4rem; border-radius: 8px; border: 1px solid rgba(255, 255, 255, 0.5); background: rgba(255, 255, 255, 0.4); outline: none; color: var(--text-main); font-family: inherit;">
+                        </div>
+                        <div class="transaction-list" id="transaction-list">
+                            <!-- Populated via JS -->
+                        </div>
+                    </section>
+
+                    <!-- Savings & Rollovers Vault Section 💰 -->
+                    <section class="glass-card savings-section hidden" data-section="savings" style="grid-column: 1 / -1;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; margin-bottom: 1.5rem;">
+                            <div>
+                                <h3 style="margin: 0; font-size: 1.35rem; display: flex; align-items: center; gap: 0.5rem;">
+                                    <span>💰</span> Savings & Rollover Vault <span>🏦</span>
+                                </h3>
+                                <p style="margin: 0.3rem 0 0 0; color: #64748b; font-size: 0.85rem;">
+                                    Auto-sweeps unspent month-end leftover balances into savings, plus your extra deposits
+                                </p>
+                            </div>
+                            <div style="display: flex; gap: 0.75rem; flex-wrap: wrap;">
+                                <button class="btn btn-primary btn-sm" id="add-piggybank-btn" style="background: linear-gradient(135deg, #ec4899, #f43f5e);">
+                                    + Add to Piggy Bank 🐷
+                                </button>
+                                <button class="btn btn-primary btn-sm" id="add-investment-btn" style="background: linear-gradient(135deg, #6366f1, #8b5cf6);">
+                                    + Add Investment 📈
+                                </button>
+                                <button class="btn btn-primary btn-sm" id="sweep-leftover-btn" style="background: linear-gradient(135deg, #10b981, #059669);">
+                                    ⚡ Sweep Month-End Leftover 💰
+                                </button>
+                                <button class="btn btn-primary btn-sm" id="add-savings-btn">
+                                    + Extra Payment 💵
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Savings Summary Cards -->
+                        <div class="summary-cards" style="margin-bottom: 1.5rem;">
+                            <div class="glass-card summary-card" style="border-top: 3px solid #10b981;">
+                                <h3 style="display: flex; align-items: center; gap: 0.4rem;">💰 Total Savings</h3>
+                                <h2 id="total-savings">₹0.00</h2>
+                                <p class="trend positive">Rollovers + Investments + Piggy Bank</p>
+                            </div>
+                            <div class="glass-card summary-card" style="border-top: 3px solid #ec4899;">
+                                <h3 style="display: flex; align-items: center; gap: 0.4rem;">🐷 Piggy Bank</h3>
+                                <h2 id="piggybank-savings">₹0.00</h2>
+                                <p class="trend positive" style="color: #ec4899;">In Total Savings 🐖</p>
+                            </div>
+                            <div class="glass-card summary-card" style="border-top: 3px solid #6366f1;">
+                                <h3 style="display: flex; align-items: center; gap: 0.4rem;">📈 Investments</h3>
+                                <h2 id="investment-savings">₹0.00</h2>
+                                <p class="trend positive">In Total Savings</p>
+                            </div>
+                            <div class="glass-card summary-card" style="border-top: 3px solid #3b82f6;">
+                                <h3 style="display: flex; align-items: center; gap: 0.4rem;">🏦 Month-End Rollovers</h3>
+                                <h2 id="rollover-savings">₹0.00</h2>
+                                <p class="trend positive">From Unspent Months</p>
+                            </div>
+                            <div class="glass-card summary-card" style="border-top: 3px solid #ef4444; background: rgba(239, 68, 68, 0.04);">
+                                <h3 style="display: flex; align-items: center; gap: 0.4rem; color: #ef4444;">⚠️ Extra Expenses</h3>
+                                <h2 id="extra-savings" style="color: #ef4444;">₹0.00</h2>
+                                <p class="trend" style="color: #ef4444;">Routed to Piggy Bank 🐷</p>
+                            </div>
+                            <div class="glass-card summary-card" style="border-top: 3px solid #06b6d4;">
+                                <h3 style="display: flex; align-items: center; gap: 0.4rem;">🪙 Month Leftover</h3>
+                                <h2 id="pending-leftover">₹0.00</h2>
+                                <p class="trend" id="pending-leftover-sub">Will auto-save at month end</p>
+                            </div>
+                        </div>
+
+                        <!-- Savings Filter & Records List -->
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; flex-wrap: wrap; gap: 0.5rem;">
+                            <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;" id="savings-filter-group">
+                                <button class="savings-filter-btn active" data-filter="all">All Records 💰</button>
+                                <button class="savings-filter-btn" data-filter="piggybank">Piggy Bank 🐷</button>
+                                <button class="savings-filter-btn" data-filter="investment">Investments 📈</button>
+                                <button class="savings-filter-btn" data-filter="rollover">Rollovers 🏦</button>
+                                <button class="savings-filter-btn" data-filter="extra_payment" style="color: #ef4444;">Extra Expenses ⚠️</button>
+                            </div>
+                            <span id="savings-record-count" style="font-size: 0.85rem; color: #64748b;">0 records</span>
+                        </div>
+
+                        <div class="transaction-list" id="savings-list">
+                            <!-- Populated via JS -->
+                        </div>
+                    </section>
+
+                    <!-- Subscriptions Section -->
+                    <section class="glass-card bills-section hidden" data-section="bills" style="grid-column: 1 / -1;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                            <h3 style="margin: 0;">Active Subscriptions & Bills</h3>
+                            <button class="btn btn-primary btn-sm" id="add-bill-btn">+ Add Subscription</button>
+                        </div>
+                        <div class="transaction-list" id="bills-list">
+                            <!-- Populated via JS -->
+                        </div>
+                    </section>
+
+                    <!-- Alerts -->
+                    <section class="glass-card alerts-section hidden" data-section="alerts" style="grid-column: 1 / -1;">
+                        <h3>Alerts</h3>
+                        <div class="alerts-list" id="alerts-list">
+                            <!-- Populated via JS -->
+                        </div>
+                    </section>
+                </div>
+            </div>
+        </main>
+
+        <!-- MODALS -->
+        <!-- Add Transaction Modal -->
+        <div id="modal-add-expense" class="modal hidden">
+            <div class="modal-content glass-panel">
+                <div class="modal-header">
+                    <h3>Cash Transaction</h3>
+                    <button class="close-modal">&times;</button>
+                </div>
+                <form id="add-expense-form">
+                    <div class="input-group">
+                        <label>Type</label>
+                        <select id="exp-type" required>
+                            <option value="expense">Expense</option>
+                            <option value="income">Income (Earnings)</option>
+                        </select>
+                    </div>
+                    <div class="input-group">
+                        <label>Amount</label>
+                        <input type="number" id="exp-amount" step="0.01" required>
+                    </div>
+                    <div class="input-group">
+                        <label>Category</label>
+                        <select id="exp-category" required>
+                            <!-- Populated via JS -->
+                        </select>
+                    </div>
+                    <div class="input-group">
+                        <label>Date</label>
+                        <input type="date" id="exp-date" required>
+                    </div>
+                    <div class="input-group">
+                        <label>Note</label>
+                        <input type="text" id="exp-note">
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100">Save Transaction</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Simulated Payments Modal -->
+        <div id="modal-payments" class="modal hidden">
+            <div class="modal-content glass-panel">
+                <div class="modal-header">
+                    <h3>Simulate Payment</h3>
+                    <button class="close-modal">&times;</button>
+                </div>
+                <div class="payment-tabs">
+                    <button class="tab-btn active" data-tab="upi">UPI Payment</button>
+                    <button class="tab-btn" data-tab="card">Card Payment</button>
+                </div>
+                <div class="tab-content" id="tab-upi">
+                    <p class="text-center">Link your UPI App to Pay</p>
+                    <div class="input-group mt-3">
+                        <label>UPI ID (e.g., name@upi)</label>
+                        <input type="text" id="upi-id" placeholder="name@upi">
+                    </div>
+                    <div class="input-group mt-3">
+                        <label>Category</label>
+                        <select id="upi-category" required></select>
+                    </div>
+                    <div class="input-group mt-3">
+                        <label>Amount</label>
+                        <input type="number" id="upi-amount" value="50" step="0.01">
+                    </div>
+                    <button id="sim-upi-btn" class="btn btn-primary w-100 mt-3">Pay via UPI</button>
+                </div>
+                <div class="tab-content hidden" id="tab-card">
+                    <p class="text-center">Add your Card to Pay</p>
+                    <div class="input-group mt-3">
+                        <label>Card Number</label>
+                        <input type="text" id="card-number" placeholder="XXXX XXXX XXXX XXXX">
+                    </div>
+                    <div style="display: flex; gap: 1rem;">
+                        <div class="input-group mt-3" style="flex: 1;">
+                            <label>Expiry (MM/YY)</label>
+                            <input type="text" id="card-expiry" placeholder="MM/YY">
+                        </div>
+                        <div class="input-group mt-3" style="flex: 1;">
+                            <label>CVV</label>
+                            <input type="text" id="card-cvv" placeholder="123">
+                        </div>
+                    </div>
+                    <div class="input-group mt-3">
+                        <label>Category</label>
+                        <select id="card-category" required></select>
+                    </div>
+                    <div class="input-group mt-3">
+                        <label>Amount</label>
+                        <input type="number" id="card-amount" value="50" step="0.01">
+                    </div>
+                    <button id="sim-card-btn" class="btn btn-primary w-100 mt-3">Pay via Card</button>
+                </div>
+            </div>
+        </div>
+    </div>
+        </div>
+
+        <!-- Add Subscription Modal -->
+        <div id="modal-add-bill" class="modal hidden">
+            <div class="modal-content glass-panel">
+                <div class="modal-header">
+                    <h3>Add Subscription / Bill</h3>
+                    <button class="close-modal">&times;</button>
+                </div>
+                <form id="add-bill-form">
+                    <div class="input-group">
+                        <label>Title</label>
+                        <input type="text" id="bill-title" placeholder="e.g. Netflix, Rent" required>
+                    </div>
+                    <div class="input-group">
+                        <label>Amount (₹)</label>
+                        <input type="number" id="bill-amount" step="0.01" placeholder="0.00" required>
+                    </div>
+                    <div class="input-group">
+                        <label>Next Due Date</label>
+                        <input type="date" id="bill-due-date" required>
+                    </div>
+                    <div class="input-group">
+                        <label>Recurrence</label>
+                        <select id="bill-recurrence" required>
+                            <option value="monthly">Monthly</option>
+                            <option value="yearly">Yearly</option>
+                            <option value="weekly">Weekly</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100 mt-3">Save Subscription</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Add Extra Payment / Savings Modal 💰 -->
+        <div id="modal-add-savings" class="modal hidden">
+            <div class="modal-content glass-panel">
+                <div class="modal-header">
+                    <h3>Deposit Extra Payment / Savings 💰</h3>
+                    <button class="close-modal">&times;</button>
+                </div>
+                <form id="add-savings-form">
+                    <div class="input-group">
+                        <label>Title / Source</label>
+                        <input type="text" id="savings-title" placeholder="e.g. Bonus, Piggy Bank, Gift, Side Gig" required>
+                    </div>
+                    <div class="input-group">
+                        <label>Amount (₹)</label>
+                        <input type="number" id="savings-amount" step="0.01" placeholder="0.00" required>
+                    </div>
+                    <div class="input-group">
+                        <label>Date</label>
+                        <input type="date" id="savings-date" required>
+                    </div>
+                    <div class="input-group">
+                        <label>Note (Optional)</label>
+                        <input type="text" id="savings-note" placeholder="e.g. Extra payment towards savings goal">
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100 mt-3">Deposit to Savings 💵</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Add Investment Modal 📈 -->
+        <div id="modal-add-investment" class="modal hidden">
+            <div class="modal-content glass-panel">
+                <div class="modal-header">
+                    <h3>Add Investment to Portfolio 📈</h3>
+                    <button class="close-modal">&times;</button>
+                </div>
+                <form id="add-investment-form">
+                    <div class="input-group">
+                        <label>Asset / Instrument Name</label>
+                        <input type="text" id="inv-title" placeholder="e.g. Nifty 50 Index Fund, Apple Inc, Gold SGB" required>
+                    </div>
+                    <div class="input-group">
+                        <label>Asset Type</label>
+                        <select id="inv-asset-type" required>
+                            <option value="Mutual Funds">Mutual Funds / SIP 📈</option>
+                            <option value="Stocks">Stocks / Equity 📊</option>
+                            <option value="Fixed Deposit">Fixed Deposit / Bonds 🏛️</option>
+                            <option value="Gold">Gold / Silver 🪙</option>
+                            <option value="Real Estate">Real Estate 🏠</option>
+                            <option value="Crypto">Crypto / Web3 🚀</option>
+                            <option value="Other">Other Asset 💎</option>
+                        </select>
+                    </div>
+                    <div class="input-group">
+                        <label>Invested Amount (₹)</label>
+                        <input type="number" id="inv-amount" step="0.01" placeholder="0.00" required>
+                    </div>
+                    <div class="input-group">
+                        <label>Date</label>
+                        <input type="date" id="inv-date" required>
+                    </div>
+                    <div class="input-group">
+                        <label>Note (Optional)</label>
+                        <input type="text" id="inv-note" placeholder="e.g. Monthly SIP, Growth portfolio">
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100 mt-3" style="background: linear-gradient(135deg, #6366f1, #8b5cf6);">Add Investment 📈</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Add to Piggy Bank Modal 🐷 -->
+        <div id="modal-add-piggybank" class="modal hidden">
+            <div class="modal-content glass-panel">
+                <div class="modal-header">
+                    <h3 style="display: flex; align-items: center; gap: 0.5rem;">Deposit to Piggy Bank 🐷</h3>
+                    <button class="close-modal">&times;</button>
+                </div>
+                <form id="add-piggybank-form">
+                    <div class="input-group">
+                        <label>Title / Description</label>
+                        <input type="text" id="piggy-title" placeholder="e.g. Spare Change, Freelance Tip, Bonus" required>
+                    </div>
+                    <div class="input-group">
+                        <label>Amount (₹)</label>
+                        <input type="number" id="piggy-amount" step="0.01" placeholder="0.00" required>
+                    </div>
+                    <div class="input-group">
+                        <label>Date</label>
+                        <input type="date" id="piggy-date" required>
+                    </div>
+                    <div class="input-group">
+                        <label>Note (Optional)</label>
+                        <input type="text" id="piggy-note" placeholder="e.g. Extra payment to piggy bank savings">
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100 mt-3" style="background: linear-gradient(135deg, #ec4899, #f43f5e);">Save in Piggy Bank 🐷</button>
+                </form>
+            </div>
+        </div>
+
+    </div>
+
+    <script src="/js/animated-counter.js"></script>
+    <script src="/js/app.js"></script>
+</body>
+</html>

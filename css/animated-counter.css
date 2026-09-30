@@ -1,0 +1,97 @@
+/* Animated Rolling Digit Counter Styles */
+
+.animated-counter {
+  display: inline-flex;
+  align-items: center;
+  font-variant-numeric: tabular-nums;
+  line-height: 1.5;
+  vertical-align: middle;
+}
+
+.animated-counter-sr {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+.animated-counter-visual {
+  display: inline-flex;
+  align-items: center;
+  user-select: none;
+}
+
+.animated-counter-fixed {
+  display: inline-block;
+}
+
+.animated-counter-mark {
+  display: inline-block;
+  opacity: 1;
+  transition: opacity 0.18s cubic-bezier(0.22, 1, 0.36, 1), transform 0.18s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.animated-counter-digit {
+  position: relative;
+  display: inline-grid;
+  overflow: hidden;
+  height: 1.5em;
+  line-height: 1.5;
+  mask-image: linear-gradient(to bottom,
+    rgba(0,0,0,0) 0%,
+    rgba(0,0,0,0.06) 5.5%,
+    rgba(0,0,0,0.5) 11%,
+    rgba(0,0,0,0.94) 16.5%,
+    #000 22%,
+    #000 78%,
+    rgba(0,0,0,0.94) 83.5%,
+    rgba(0,0,0,0.5) 89%,
+    rgba(0,0,0,0.06) 94.5%,
+    rgba(0,0,0) 100%);
+  -webkit-mask-image: linear-gradient(to bottom,
+    rgba(0,0,0,0) 0%,
+    rgba(0,0,0,0.06) 5.5%,
+    rgba(0,0,0,0.5) 11%,
+    rgba(0,0,0,0.94) 16.5%,
+    #000 22%,
+    #000 78%,
+    rgba(0,0,0,0.94) 83.5%,
+    rgba(0,0,0,0.5) 89%,
+    rgba(0,0,0,0.06) 94.5%,
+    rgba(0,0,0) 100%);
+}
+
+.animated-counter-sizer {
+  grid-area: 1/1;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.animated-counter-stack {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  display: flex;
+  flex-direction: column;
+  will-change: transform;
+}
+
+.animated-counter-face {
+  height: 1.5em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animated-counter-mark,
+  .animated-counter-stack {
+    transition: none !important;
+  }
+}
